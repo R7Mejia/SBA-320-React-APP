@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import MovieCard from "./components/MovieCard";
-import SearchIcon from "./assets/search_icon.svg"; //deleted intentionally
+import SearchIcon from "./assets/search_icon.svg"; 
 import Copyright from "./components/Copyright";
 
 import "./App.css";
@@ -9,24 +9,18 @@ import "./App.css";
 const API_URL = "http://www.omdbapi.com?apikey=98e3fb1f";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isMounted, setIsMounted] = useState(true);
+  const [searchPeli, setSearchPeli] = useState("");
+  const [peliculas, setPeliculas] = useState([]);
 
   useEffect(() => {
-    // Set the flag to true when the component mounts
-    setIsMounted(true);
-    // Clean up function to set the flag to false when the component unmounts
-    return () => setIsMounted(false);
+    searchMovies("");
   }, []);
 
   const searchMovies = async (title) => {
     const response = await fetch(`${API_URL}&s=${title}`);
     const data = await response.json();
-    // Check if the component is still mounted before updating the state
-    if (isMounted) {
-      setMovies(data.Search);
-    }
+
+    setPeliculas(data.Search);
   };
 
   return (
@@ -37,18 +31,18 @@ const App = () => {
 
       <div className="search">
         <input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchPeli}
+          onChange={(e) => setSearchPeli(e.target.value)}
           placeholder="busca la peli aqui"
         />
         
-          <img src={SearchIcon} alt="search" onClick={() => searchMovies(searchTerm)} />  
-        <button className="btn" onClick={() => searchMovies(searchTerm)}>Search</button>
+          <img src={SearchIcon} alt="search" onClick={() => searchMovies(searchPeli)} />  
+        <button className="btn" onClick={() => searchMovies(searchPeli)}></button>
       </div>
 
-      {movies?.length > 0 ? (
+      {peliculas?.length > 0 ? (
         <div className="container">
-          {movies.map((movie) => (
+          {peliculas.map((movie) => (
             <MovieCard key={movie.imdbID} movie={movie} />
           ))}
         </div>
